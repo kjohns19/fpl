@@ -2,9 +2,14 @@ require 'FileUtils'
 require 'object.rb'
 
 def read_variable(variable)
-    contents = File.readlines(variable.path)
-    variable.type = contents[0]
-    variable.value = contents.drop(1).join("\n")
+    begin
+        contents = File.readlines(variable.path)
+        variable.type = contents[0]
+        variable.value = contents.drop(1).join("\n")
+    rescue
+        variable.type = FPLNull
+        variable.value = nil
+    end
 end
 
 def write_variable(variable)
