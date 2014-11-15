@@ -2,26 +2,26 @@ require 'operator.rb'
 require 'util.rb'
 
 class Stack
-	def initilize
-		@stack = []
-	end
+    def initilize
+        @stack = []
+    end
 
-	def push(val)
-		if val.is_a? Operator
-			val.execute(self)
-		else
+    def push(val)
+        if val.is_a? Operator
+            val.execute(self)
+        else
             val.path||=Utils.generate_temp_path
-			@stack << val
-		end
-	end
+            @stack << val
+        end
+    end
 
-	def pop
-		var = @stack.pop
+    def pop
+        var = @stack.pop
         var.delete if var.is_temp?
         return var
-	end
+    end
 
-	def peek
-		@stack.last
-	end
+    def peek
+        @stack.last
+    end
 end
