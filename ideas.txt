@@ -1,0 +1,132 @@
+TODO:
+Grammar - postfix everything
+
+
+Variabes
+========
+First line is the type
+Value after
+
+Complex Data types
+Arrays - Folders, names are indices
+Structs - Folders, files are struct data members
+
+
+Functions
+=========
+Create folder
+	Arguments - names of params are known, files created with those names 
+
+Return values - create file _return in ../, copy to assigned variable
+
+States number of parameters to use from stack
+
+Executed with call operator
+
+layout
+foo a b 2 fun
+	code
+endfun =
+
+
+Built-in Functions
+==================
++, -, *, **, /, %, &&, ||, !, ?, ^, <, <=, >, >= , ==, !=
+
+
+Program Scope
+=============
+Top level directory - search for function calls here first
+Search in stack for variables
+
+Code blocks -> don't exist, data accessible outside of "scope"
+
+
+Opreators/Keywords
+==================
+return
+ref, deref
+heap
+delete
+call
+then, end
+fun, endfun
+while, endwhile
+exit
+at
+
+
+Control Flow Logic
+==================
+x y < then		(match then & end/else, else & end, until count = 0)
+	then		(see else, count = 1, take else)
+	else
+	end
+else
+end
+
+x y < ! then
+...
+end
+
+a b < while
+...
+endwhile
+
+z = (x < y) ? a : b;
+z a b x y < ? =
+
+x y < then
+	z = a
+end
+else
+	z = b
+end
+
+str "hi there" =
+	create temp file for string literals, primitives
+
+
+Pointers
+========
+Absolute paths (maybe relative to the top-level)
+
+i array.2 ref =
+
+j i deref =
+
+ref - creates tmp file containing the path, used in assignment
+deref - replace with path name on the stack
+delete tmp files after it's popped off of the stack
+
+
+Heap
+====
+Top-level folder called heap, containing files with generated names
+Accessed with pointers
+heap operator
+	creates object on the heap
+	creates tmp file in current program scope
+	puts tmp file on the stack, pointer can be assigned
+	heap deref object =
+delete operator
+	deletes object on the heap
+	pointer deref delete
+
+
+Stack
+=====
+delete operator
+	deletes object on the heap
+
+
+Object Operator
+===============
+i object =
+
+
+I/O
+===
+Operators
+	intput - read line, put into tmp variable, put on stack
+	output - pop off stack, print string value
