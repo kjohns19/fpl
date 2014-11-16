@@ -1,11 +1,17 @@
+require_relative 'types.rb'
 require 'fileutils.rb'
 
 def read_variable(variable)
     begin
         # If directory, type is object, value is list of variables in folder
-        contents = File.readlines(variable.path)
-        variable.type = contents[0].chomp
-        variable.value = contents.drop(1).join("").chomp
+        if File.directory?(variable.path)
+            variable.type = FPLObject
+            variable.value = Dir[File.join(variable.path, '*')]
+        else
+            contents = File.readlines(variable.path)
+            variable.type = contents[0].chomp
+            variable.value = contents.drop(1).join("").chomp
+        end
     rescue
         #puts "File #{variable.path} doesn't exist!"
         variable.type = FPLNull

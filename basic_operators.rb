@@ -66,6 +66,19 @@ class OrOp < Operator
     end
 end
 
+class ObjOp < Operator
+    def num_operands
+        0
+    end
+
+    def execute(stack)
+        var = Variable.new
+        var.type = FPLObject
+        var.value = []
+        stack.push(var)
+    end
+end
+
 class RefOp < Operator
     def num_operands
         1

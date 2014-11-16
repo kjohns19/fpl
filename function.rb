@@ -69,7 +69,9 @@ class FPLFunction
     end
 
     def handle_control(var, index, stack, flowstack)
-        if var == :end
+        if var == :exit
+            return @code.size
+        elsif var == :end
             last, lastindex = flowstack.pop
             puts "ERROR: end without then/while!" unless last
             if last == :while

@@ -22,7 +22,7 @@ class Parser
             else
                 var = Utils.operator(token)
                 var||=Utils.control_keyword(token)
-                var||=Variable.new(token)
+                var||=Variable.new(token.gsub(',', '/'))
             end
             next var
         end
