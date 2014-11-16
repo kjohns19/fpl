@@ -1,0 +1,76 @@
+mergesort arr left right ms_fun m_fun 5 fun
+    size right left - =
+    size 0 == then
+        obj exit
+    end
+    size 1 == then
+        res obj =
+        res.0 arr deref left at =
+        res exit
+    end
+    mid size 2 / left + =
+    left_sorted arr left mid ms_fun m_fun ms_fun deref call =
+    right_sorted arr mid right ms_fun m_fun ms_fun deref call =
+    left_sorted ref mid left - right_sorted ref right mid - m_fun deref call
+end =
+
+merge left left_size right right_size 4 fun
+    result obj =
+    i 0 =
+    j 0 =
+    k 0 =
+
+    j left_size < k right_size < and while
+        left deref j at right deref k at < then
+            result i at left deref j at =
+            j j 1 + =
+        else
+            result i at right deref k at =
+            k k 1 + =
+        end
+        i i 1 + =
+    end
+
+    j left_size < while
+        result i at left deref j at =
+        j j 1 + =
+        i i 1 + =
+    end
+
+    k right_size < while
+        result i at right deref k at =
+        k k 1 + =
+        i i 1 + =
+    end
+    result
+end =
+
+arr obj =
+arr.0 2 =
+arr.1 4 =
+arr.2 5 =
+arr.3 3 =
+arr.4 1 =
+arr.5 2 =
+arr.6 4 =
+arr.7 5 =
+arr.8 3 =
+arr.9 1 =
+
+size 10 =
+
+"Start:" put
+i 0 =
+i size < while
+    arr i at put
+    i i 1 + =
+end
+
+sorted arr ref 0 size mergesort ref merge ref mergesort call =
+
+"Sorted:" put
+i 0 =
+i size < while
+    sorted i at put
+    i i 1 + =
+end
