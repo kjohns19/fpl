@@ -36,7 +36,6 @@ class FPLFunction
     def execute(stack)
         funcname = File.basename(@variable.path)
         funcpath = File.join(Dir.pwd, "f_#{funcname}")
-        puts "New function #{funcname} from #{Dir.pwd}"
 
         Dir.mkdir funcpath
         @args.each do |arg|
@@ -61,10 +60,10 @@ class FPLFunction
 
             begin
                 if var.is_a? Symbol
-                    puts "#{index}: #{var}"
+                    #puts "#{index}: #{var}"
                     index = handle_control(var, index, stack, flowstack)
                 else
-                    puts "#{index}: #{var.name}"
+                    #puts "#{index}: #{var.name}"
                     stack.push(var)
                 end
             rescue => err

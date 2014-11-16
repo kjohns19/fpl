@@ -28,8 +28,16 @@ class Stack
         var = @stack.pop
         if var
             var.load if do_load
-            #puts "Read #{var.value} from #{var.path}"
-            var.delete if var.is_temp?
+            if var.is_temp?
+                if var.type.is_a? FPLObject
+                    var.value = var.value.map do |v|
+                        val = Variable.new(v)
+                        val.load
+                        next val
+                    end
+                end
+                var.delete
+            end
         else
             puts "Popping from empty stack"
         end
