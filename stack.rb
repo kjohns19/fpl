@@ -2,9 +2,9 @@ require 'operator.rb'
 require 'util.rb'
 
 class Stack
-	def initilize
-		@stack = []
-	end
+    def initilize
+        @stack = []
+    end
 
 	def push(val)
 		if val.is_a? Operator
@@ -19,13 +19,13 @@ class Stack
 		end
 	end
 
-	def pop
-		var = @stack.pop
+    def pop
+        var = @stack.pop
         var.delete if var.is_temp?
         return var
-	end
+    end
 
-	def peek
-		@stack.last
-	end
+    def peek
+        @stack.last
+    end
 end
