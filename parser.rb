@@ -15,7 +15,9 @@ class Parser
             elsif token =~ /^".*"$/
                 var = Variable.new(nil, token)
                 var.type = FPLString
-                var.value = token[1..-2]
+                var.value = token[1..-2].gsub('\n',"\n").
+                                         gsub('\t',"\t").
+                                         gsub('\"','"')
             elsif token == 'true' || token == 'false'
                 var = Variable.new(nil, token)
                 var.type = FPLBool

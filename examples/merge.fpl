@@ -1,4 +1,4 @@
-mergesort arr left right ms_fun m_fun 5 fun
+mergesort arr left right cmp ms_fun m_fun 6 fun
     size right left - =
     size 0 == then
         obj exit
@@ -9,19 +9,19 @@ mergesort arr left right ms_fun m_fun 5 fun
         res exit
     end
     mid size 2 / left + =
-    left_sorted arr left mid ms_fun m_fun ms_fun deref call =
-    right_sorted arr mid right ms_fun m_fun ms_fun deref call =
-    left_sorted ref mid left - right_sorted ref right mid - m_fun deref call
+    left_sorted arr left mid cmp ms_fun m_fun ms_fun deref call =
+    right_sorted arr mid right cmp ms_fun m_fun ms_fun deref call =
+    left_sorted ref mid left - right_sorted ref right mid - cmp m_fun deref call
 end =
 
-merge left left_size right right_size 4 fun
+merge left left_size right right_size cmp 5 fun
     result obj =
     i 0 =
     j 0 =
     k 0 =
 
-    j left_size < k right_size < and while
-        left deref j at right deref k at < then
+    j left_size < k right_size < && while
+        left deref j at right deref k at cmp deref call then
             result i at left deref j at =
             j j 1 + =
         else
@@ -46,18 +46,13 @@ merge left left_size right right_size 4 fun
 end =
 
 arr obj =
-arr.0 2 =
-arr.1 4 =
-arr.2 5 =
-arr.3 3 =
-arr.4 1 =
-arr.5 2 =
-arr.6 4 =
-arr.7 5 =
-arr.8 3 =
-arr.9 1 =
 
-size 10 =
+size 100 =
+i 0 =
+i size < while
+    arr i at 0 100 rand =
+    i i 1 + =
+end
 
 "Start:" put
 i 0 =
@@ -66,9 +61,13 @@ i size < while
     i i 1 + =
 end
 
-sorted arr ref 0 size mergesort ref merge ref mergesort call =
+cmp a b 2 fun
+    a b <
+end =
 
-"Sorted:" put
+sorted arr ref 0 size cmp ref mergesort ref merge ref mergesort call =
+
+"\nSorted:" put
 i 0 =
 i size < while
     sorted i at put

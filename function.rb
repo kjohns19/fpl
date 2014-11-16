@@ -33,13 +33,13 @@ class FPLFunction
         @value
     end
 
-    def execute(stack)
+    def execute(prev_stack, use_this_stack = false)
         funcname = File.basename(@variable.path)
-        funcpath = File.join(Dir.pwd, "f_#{funcname}")
+        funcpath = use_this_stack ? Dir.pwd : File.join(Dir.pwd, '0')
 
-        Dir.mkdir funcpath
+        Dir.mkdir funcpath unless use_this_stack
         @args.each do |arg|
-            value = stack.pop
+            value = prev_stack.pop
             if value
                 var = Variable.new(File.join(funcpath, arg))
                 var.type = value.type.class
@@ -49,11 +49,11 @@ class FPLFunction
                 puts "No value for #{arg}"
             end
         end
-        Dir.chdir funcpath
+        Dir.chdir funcpath unless use_this_stack
 
         flowstack = []
 
-        stack = Stack.new
+        stack = use_this_stack ? prev_stack : Stack.new
         index = 0
         while index < @code.size
             var = @code[index]
@@ -82,15 +82,17 @@ class FPLFunction
             index+=1
         end
 
-        retval = stack.pop || Variable.new
+        retval = stack.empty? ? Variable.new : stack.pop
 
-        Dir.chdir('..')
-        ret = Variable.new('_return')
+        ret = Variable.new
         ret.type = retval.type.class
         ret.value = retval.value
-        ret.save
+        prev_stack.push(ret)
 
-        FileUtils.rm_r(funcpath)
+        unless use_this_stack
+            Dir.chdir('..')
+            FileUtils.rm_r(funcpath)
+        end
     end
 
     def skip_to(index, syms)

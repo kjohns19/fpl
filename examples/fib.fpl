@@ -6,4 +6,4 @@ fib i fibptr 2 fun
     end
 end =
 
-30 fib ref fib call put
+20 fib ref fib call put

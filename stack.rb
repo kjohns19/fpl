@@ -44,6 +44,10 @@ class Stack
         return var
     end
 
+    def empty?
+        @stack.empty?
+    end
+
     def peek
         @stack.last
     end

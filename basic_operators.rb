@@ -48,7 +48,7 @@ class AndOp < Operator
     end
 
     def name
-        'and'
+        '&&'
     end
 
     def execute(stack)
@@ -67,7 +67,7 @@ class OrOp < Operator
     end
 
     def name
-        'or'
+        '||'
     end
 
     def execute(stack)
@@ -144,7 +144,7 @@ class OutputOp < Operator
 
     def execute(stack)
         var = stack.pop
-        puts "Value: #{var.value}"
+        puts var.value
     end
 end 
 class InputOp < Operator
@@ -158,7 +158,10 @@ class InputOp < Operator
 
     def execute(stack)
         line = STDIN.gets.chomp
-        stack.push(Parser.parse(line))
+        fun = Variable.new(File.join(Dir.pwd, "call"))
+        fun.type = FPLFunction
+        fun.value = [[], Parser.parse(line)]
+        fun.type.execute(stack, true)
     end
 end
 
@@ -238,13 +241,6 @@ class CallOp < Operator
     def execute(stack)
         fun = stack.pop
         fun.type.execute(stack)
-        ret = Variable.new('_return')
-        ret.load
-
-        var = Variable.new
-        var.type = ret.type.class
-        var.value = ret.value
-        stack.push(var)
     end
 end
 
@@ -262,5 +258,25 @@ class AtOp < Operator
         obj = stack.pop(false)
         path = File.join(Utils.absolute_path(obj.path), index.to_s)
         stack.push(Variable.new(path))
+    end
+end
+
+class RandOp < Operator
+    def num_operands
+        2
+    end
+
+    def name
+        'rand'
+    end
+
+    def execute(stack)
+        val1 = stack.pop.value
+        val2 = stack.pop.value
+
+        result = Variable.new
+        result.type = FPLNumber
+        result.value = val2 + rand(val1-val2)
+        stack.push(result)
     end
 end

@@ -39,8 +39,8 @@ class Utils
             'put'   => OutputOp.new,
             'get'   => InputOp.new,
             '='     => AssignOp.new,
-            'and'   => AndOp.new,
-            'or'    => OrOp.new,
+            '&&'   => AndOp.new,
+            '||'    => OrOp.new,
             'ref'   => RefOp.new,
             'deref' => DerefOp.new,
             'heap'  => HeapOp.new,
@@ -48,7 +48,8 @@ class Utils
             'pop'   => PopOp.new,
             'call'  => CallOp.new,
             'obj'   => ObjOp.new,
-            'at'    => AtOp.new
+            'at'    => AtOp.new,
+            'rand'  => RandOp.new
         } )
 
         return @operators[token]
