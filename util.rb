@@ -15,6 +15,12 @@ class Utils
         return File.join(@base_path, "tmp", "#{@p}")
     end
 
+    def self.generate_heap_path
+        @hp||=0
+        @tp += 1
+        return File.join(@base_path, "heap", "#{@tp}")
+    end
+
     def self.binary_operators
         @bin_ops||=['+', '-', '*', '**', '/', '%', '^', 'and', 'or', 
                     '<', '<=', '>', '>=', '==', '!=']
