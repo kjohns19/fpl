@@ -43,5 +43,6 @@ end
 # create cycle
 list_tail deref "next" at list_head =
 
-get
+get pop
+
 list_head has_cycle call put

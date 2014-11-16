@@ -32,5 +32,6 @@ node_ptr deref "next" at null != while
     node_ptr node_ptr deref "next" at =
     del_ptr deref delete
 end
+node_ptr deref delete
 
 node_ptr list_head =
