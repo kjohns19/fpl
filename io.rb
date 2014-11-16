@@ -7,12 +7,14 @@ def read_variable(variable)
         variable.type = contents[0].chomp
         variable.value = contents.drop(1).join("")
     rescue
+        #puts "File #{variable.path} doesn't exist!"
         variable.type = FPLNull
         variable.value = nil
     end
 end
 
 def write_variable(variable)
+    #puts "Saving #{variable.path}"
     if variable.type.is_a? FPLObject 
         Dir.mkdir variable.path
         variable.value.each { |v| write_variable(v) }
@@ -25,6 +27,6 @@ def write_variable(variable)
 end
 
 def delete_variable(variable)
-    puts variable.path
+    #puts variable.path
     FileUtils.rm_r(variable.path)
 end

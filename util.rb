@@ -32,8 +32,8 @@ class Utils
                 { op => UnaryOp.new(op) }
             end.reduce(:merge))
             @operators.merge!( {
-                'get' => OutputOp.new,
-                'put' => InputOp.new
+                'put' => OutputOp.new,
+                'get' => InputOp.new
             } )
         end
 

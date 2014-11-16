@@ -4,7 +4,6 @@ require_relative 'util.rb'
 class Stack
     def initialize
         @stack = []
-        puts "stck init"
     end
 
     def push(val)
@@ -17,15 +16,18 @@ class Stack
                 val.path = Utils.generate_temp_path
             end
             @stack << val
-            puts @stack
+            #puts "Stack: #{@stack.inspect}"
             val.save
-            puts File.readlines(val.path).join("")
+            #puts File.readlines(val.path).join("")
         end
     end
 
     def pop
         var = @stack.pop
-        var.delete if var.is_temp?
+        if var
+            var.load
+            var.delete if var.is_temp?
+        end
         return var
     end
 

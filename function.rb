@@ -19,14 +19,13 @@ class FPLFunction
         @value
     end
 
-    def execute(args)
+    def execute(stack)
         Dir.mkdir @variable.path
-        args.each_with_index do |arg, i|
-            varname = @args[i]
-            arg.load
-            var = Variable.new(File.join(@variable.path, varname))
-            var.type = arg.type
-            var.value = arg.value
+        @args.each do |arg|
+            value = stack.pop
+            var = Variable.new(File.join(@variable.path, arg))
+            var.type = value.type.class
+            var.value = value.value
             var.save
         end
         Dir.chdir @variable.path
@@ -40,15 +39,11 @@ class FPLFunction
             index+=1
         end
 
-        #take top value off stack, put in the file _return in parent directory
-        #move up a directory
-        #delete the folder
         retval = stack.pop || Variable.new
-        retval.load
 
         Dir.chdir('..')
         ret = Variable.new('_return')
-        ret.type = retval.type
+        ret.type = retval.type.class
         ret.value = retval.value
         ret.save
 

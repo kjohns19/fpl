@@ -12,15 +12,14 @@ class Variable
                 FPLNull:     FPLNull }
 
     def self.typeFromValue(value)
-        case value.class
-        when Number
-            FPLNumber
-        when String
-            FPLString
-        when Boolean
-            FPLBool
+        if value.is_a? Numeric
+            return FPLNumber
+        elsif value.is_a? String
+            return FPLString
+        elsif value.is_a?(TrueClass) || value.is_a?(FalseClass)
+            return FPLBool
         else
-            FPLNull
+            return FPLNull
         end
     end
 
@@ -38,6 +37,7 @@ class Variable
         else
             @type = type.new(self)
         end
+        #puts "Type = #{type}"
     end
 
     def value
@@ -46,6 +46,7 @@ class Variable
 
     def value=(value)
         @type.value = value
+        #puts "Value = #{self.value}"
     end
 
     def load
@@ -67,16 +68,13 @@ class Variable
      Utils.binary_operators.each do |op|
         class_eval "
         def #{op}(variable)
-            self.load
-            variable.load
-
-            puts \"Self: \#{self.value}\"
-            puts \"Var:  \#{variable.value}\"
-            puts \"Op: #{op}\"
+            #puts \"Self: \#{self.value}\"
+            #puts \"Var:  \#{variable.value}\"
+            #puts \"Op: #{op}\"
             val = self.value.send(#{op.inspect}, variable.value)
 
             result = Variable.new
-            result.type = typeFromValue(val)
+            result.type = Variable.typeFromValue(val)
             result.value = val
             return result
         end"
@@ -84,11 +82,10 @@ class Variable
      Utils.unary_operators.each do |op|
         class_eval "
         def #{op}
-            self.load
             val = self.value.send(#{op.inspect})
 
             result = Variable.new
-            result.type = typeFromValue(val)
+            result.type = Variable.typeFromValue(val)
             result.value = val
             return result
         end"

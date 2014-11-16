@@ -44,7 +44,6 @@ end
 class DerefOp < Operator
     def execute(stack)
         ptr = stack.pop
-        ptr.load
         raise FPLError,
               'Deref called on non-pointer' unless ptr.type.is_a? FPLPointer
         var = Variable.new(ptr.value)
@@ -55,10 +54,9 @@ end
 class OutputOp < Operator
     def execute(stack)
         var = stack.pop
-        puts var.value.to_s
+        puts var.value
     end
-end
-
+end 
 class InputOp < Operator
     def execute(stack)
         line = STDIN.gets.chomp
