@@ -9,7 +9,8 @@ class Variable
                 FPLFunction: FPLFunction,
                 FPLPointer:  FPLPointer,
                 FPLObject:   FPLObject,
-                FPLNull:     FPLNull }
+                FPLNull:     FPLNull
+    }
 
     def self.typeFromValue(value)
         if value.is_a? Numeric

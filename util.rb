@@ -49,7 +49,8 @@ class Utils
             'call'  => CallOp.new,
             'obj'   => ObjOp.new,
             'at'    => AtOp.new,
-            'rand'  => RandOp.new
+            'rand'  => RandOp.new,
+            'quit'  => QuitOp.new
         } )
 
         return @operators[token]

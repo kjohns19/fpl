@@ -280,3 +280,17 @@ class RandOp < Operator
         stack.push(result)
     end
 end
+
+class QuitOp < Operator
+    def num_operands
+        0
+    end
+
+    def name
+        'quit'
+    end
+
+    def execute(stack)
+        raise FLPQuit
+    end
+end
