@@ -1,7 +1,6 @@
 require 'types.rb'
 
 class Parser
-
     def parse(str)
         str.scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
             var = nil
@@ -9,13 +8,13 @@ class Parser
                 var = Variable.new
                 var.type = FPLNumber
                 var.value = token
-            else if token =~ /^".*"$/
+            elsif token =~ /^".*"$/
                 var = Variable.new
                 var.type = FPLString
                 var.value = token[1..-2]
-            else if token == 'true' || token == 'false'
+            elsif token == 'true' || token == 'false'
                 var = Variable.new
-                var.type = FPLBoolean
+                var.type = FPLBool
                 var.value = token
             else
                 op = Utils.operator(token)
@@ -26,5 +25,4 @@ class Parser
             next var
         end
     end
-
 end

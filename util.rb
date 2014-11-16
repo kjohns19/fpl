@@ -1,3 +1,5 @@
+require 'basic_operators.rb'
+
 class Utils
     def self.base_path=(path)
         @base_path = path
@@ -18,7 +20,23 @@ class Utils
                     '<', '<=', '>', '>=', '==', '!=']
     end
 
-    def self.binary_operators
-        @un_ops||=['!', 'ref', 'deref']
+    def self.unary_operators
+        @un_ops||=['!']
+    end
+
+    def self.operator(token)
+        unless @operators
+            @operators = self.binary_operators.map do |op|
+                { op => BinaryOperator.new(op) }
+            end.reduce(:merge).merge(self.unary_operators.map do |op|
+                { op => UnaryOperator.new(op) }
+            end.reduce(:merge))
+            @operators.merge!( {
+                'get' => OutputOp.new
+                'put' => InputOp.new
+            } )
+        end
+
+        return @operators[token]
     end
 end

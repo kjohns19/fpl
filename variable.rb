@@ -5,6 +5,7 @@ class Variable
                 function: FPLFunction,
                 pointer:  FPLPointer,
                 object:   FPLObject }
+
     def self.typeFromValue(value)
         case value.class
         when Number
@@ -18,9 +19,9 @@ class Variable
         end
     end
 
-    def initialize(path)
+    def initialize(path = nil)
         @path = path
-        @type = FPLNull.new
+        @type = FPLNull.new(self)
     end
 
     attr_reader :type
@@ -28,9 +29,9 @@ class Variable
 
     def type=(type)
         if type.is_a? String
-            @type = @@types[type.to_sym].new
+            @type = @@types[type.to_sym].new(self)
         else
-            @type = type.new
+            @type = type.new(self)
         end
     end
 
@@ -39,15 +40,15 @@ class Variable
     end
 
     def value=(value)
-        @type.set(value)
+        @type.value = value
     end
 
     def load
-        read_variable(self)
+        read_variable(self) if @path
     end
 
     def save
-        write_variable(self)
+        write_variable(self) if @path
     end
 
     def delete
@@ -66,7 +67,7 @@ class Variable
 
             val = self.value.send(#{op.inspect}, value.value)
 
-            result = Variable.new(nil)
+            result = Variable.new
             result.type = typeFromValue(val)
             result.value = val
             return result
@@ -78,7 +79,7 @@ class Variable
             self.load
             val = self.value.send(#{op.inspect})
 
-            result = Variable.new(nil)
+            result = Variable.new
             result.type = typeFromValue(val)
             result.value = val
             return result

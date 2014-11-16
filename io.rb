@@ -3,6 +3,7 @@ require 'object.rb'
 
 def read_variable(variable)
     begin
+        # If directory, type is object, value is list of variables in folder
         contents = File.readlines(variable.path)
         variable.type = contents[0]
         variable.value = contents.drop(1).join("\n")
