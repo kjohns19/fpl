@@ -33,10 +33,14 @@ class Utils
             end.reduce(:merge))
             @operators.merge!( {
                 'put' => OutputOp.new,
-                'get' => InputOp.new
+                'get' => InputOp.new,
+                '='   => AssignOp.new
             } )
         end
 
         return @operators[token]
+    end
+
+    def self.control_keyword(token)
     end
 end

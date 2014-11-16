@@ -6,7 +6,7 @@ class FPLBool
     end
 
     def value=(value)
-        @value = value == 'false' ? false : true
+        @value = (value.to_s == 'true') ? true : false
     end
 end
 

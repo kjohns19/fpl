@@ -5,7 +5,9 @@ require_relative 'function.rb'
 require_relative 'stack.rb'
 require 'fileutils.rb'
 
-code = File.readlines(ARGV[0]).join("\n")
+code = File.readlines(ARGV[0]).join("")
+puts code
+puts
 FileUtils.mkdir_p 'fpl/tmp'
 FileUtils.mkdir_p 'fpl/heap'
 Dir.chdir 'fpl'

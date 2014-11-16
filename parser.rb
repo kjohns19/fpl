@@ -4,7 +4,8 @@ require_relative 'util.rb'
 
 class Parser
     def self.parse(str)
-        str.scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
+        str.split("\n").join(' ').scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
+            #puts "Token: <#{token}>"
             var = nil
             if token =~ /^\d+(\.\d+)?$/
                 var = Variable.new

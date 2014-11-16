@@ -5,7 +5,7 @@ def read_variable(variable)
         # If directory, type is object, value is list of variables in folder
         contents = File.readlines(variable.path)
         variable.type = contents[0].chomp
-        variable.value = contents.drop(1).join("")
+        variable.value = contents.drop(1).join("").chomp
     rescue
         #puts "File #{variable.path} doesn't exist!"
         variable.type = FPLNull
@@ -14,7 +14,7 @@ def read_variable(variable)
 end
 
 def write_variable(variable)
-    #puts "Saving #{variable.path}"
+    #puts "Saving #{variable.value} to #{variable.path}"
     if variable.type.is_a? FPLObject 
         Dir.mkdir variable.path
         variable.value.each { |v| write_variable(v) }

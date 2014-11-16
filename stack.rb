@@ -17,7 +17,7 @@ class Stack
             end
             @stack << val
             #puts "Stack: #{@stack.inspect}"
-            val.save
+            val.save if val.is_temp?
             #puts File.readlines(val.path).join("")
         end
     end
@@ -26,6 +26,7 @@ class Stack
         var = @stack.pop
         if var
             var.load
+            #puts "Read #{var.value} from #{var.path}"
             var.delete if var.is_temp?
         end
         return var

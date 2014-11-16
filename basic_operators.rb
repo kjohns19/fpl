@@ -11,9 +11,6 @@ class BinaryOp < Operator
     def execute(stack)
         val2 = stack.pop
         val1 = stack.pop
-        # puts "val1: #{val1}"
-        # puts "val2: #{val2}"
-        # puts "op:   #{@op}"
         result = val1.send(@op, val2)
         stack.push(result)
     end
@@ -61,5 +58,15 @@ class InputOp < Operator
     def execute(stack)
         line = STDIN.gets.chomp
         stack.push(Parser.parse(line))
+    end
+end
+
+class AssignOp < Operator
+    def execute(stack)
+        val = stack.pop
+        var = stack.pop
+        var.type = val.type.class
+        var.value = val.value
+        var.save
     end
 end

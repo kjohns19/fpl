@@ -30,11 +30,13 @@ class FPLFunction
         end
         Dir.chdir @variable.path
 
+        flowstack = []
 
         stack = Stack.new
         index = 0
         while index < @code.size
             var = @code[index]
+            #puts var
             stack.push(var)
             index+=1
         end
