@@ -141,3 +141,27 @@ class AssignOp < Operator
         var.save
     end
 end
+
+class HeapOp < Operator
+    def num_operands
+        0
+    end
+
+    def execute(stack)
+        val = Variable.new
+        val.type = FPLPointer
+        val.value = Utils.generate_heap_path
+        stack.push(val)
+    end
+end
+
+class DeleteOp < Operator
+    def num_operands
+        0
+    end
+
+    def execute(stack)
+        val = stack.pop
+        val.delete
+    end
+end
