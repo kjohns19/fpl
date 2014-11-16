@@ -27,6 +27,6 @@ def write_variable(variable)
 end
 
 def delete_variable(variable)
-    #puts variable.path
+    #puts "Deleting #{variable.path}"
     FileUtils.rm_r(variable.path)
 end

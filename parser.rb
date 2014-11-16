@@ -20,10 +20,9 @@ class Parser
                 var.type = FPLBool
                 var.value = token
             else
-                op = Utils.operator(token)
-                next op if op
-
-                var = Variable.new(token)
+                var = Utils.operator(token)
+                var||=Utils.control_keyword(token)
+                var||=Variable.new(token)
             end
             next var
         end

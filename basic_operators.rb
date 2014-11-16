@@ -8,6 +8,10 @@ class BinaryOp < Operator
         @op = op
     end
 
+    def num_operands
+        2
+    end
+
     def execute(stack)
         val2 = stack.pop
         val1 = stack.pop
@@ -21,6 +25,10 @@ class UnaryOp < Operator
         @op = op
     end
 
+    def num_operands
+        1
+    end
+
     def execute(stack)
         val = stack.pop
         result = val.send(@op)
@@ -28,7 +36,41 @@ class UnaryOp < Operator
     end
 end
 
+class AndOp < Operator
+    def num_operands
+        2
+    end
+
+    def execute(stack)
+        val2 = stack.pop.true?
+        val1 = stack.pop.true?
+        result = Variable.new
+        result.type = FPLBool
+        result.value = val1 && val2
+        stack.push(result)
+    end
+end
+
+class OrOp < Operator
+    def num_operands
+        2
+    end
+
+    def execute(stack)
+        val2 = stack.pop.true?
+        val1 = stack.pop.true?
+        result = Variable.new
+        result.type = FPLBool
+        result.value = val1 || val2
+        stack.push(result)
+    end
+end
+
 class RefOp < Operator
+    def num_operands
+        1
+    end
+
     def execute(stack)
         var = stack.pop
         pointer = Variable.new
@@ -39,6 +81,10 @@ class RefOp < Operator
 end
 
 class DerefOp < Operator
+    def num_operands
+        1
+    end
+
     def execute(stack)
         ptr = stack.pop
         raise FPLError,
@@ -49,12 +95,20 @@ class DerefOp < Operator
 end
 
 class OutputOp < Operator
+    def num_operands
+        0
+    end
+
     def execute(stack)
         var = stack.pop
         puts var.value
     end
 end 
 class InputOp < Operator
+    def num_operands
+        1
+    end
+
     def execute(stack)
         line = STDIN.gets.chomp
         stack.push(Parser.parse(line))
@@ -62,6 +116,10 @@ class InputOp < Operator
 end
 
 class AssignOp < Operator
+    def num_operands
+        0
+    end
+
     def execute(stack)
         val = stack.pop
         var = stack.pop

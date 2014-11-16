@@ -11,7 +11,9 @@ class Stack
             val.execute(self)
         else
             if val.path
-                val.path = Utils.absolute_path(val.path)
+                if val.path[0] != '/'
+                    val.path = Utils.absolute_path(val.path)
+                end
             else
                 val.path = Utils.generate_temp_path
             end
@@ -28,6 +30,8 @@ class Stack
             var.load
             #puts "Read #{var.value} from #{var.path}"
             var.delete if var.is_temp?
+        else
+            puts "Popping from empty stack"
         end
         return var
     end

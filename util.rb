@@ -34,7 +34,9 @@ class Utils
             @operators.merge!( {
                 'put' => OutputOp.new,
                 'get' => InputOp.new,
-                '='   => AssignOp.new
+                '='   => AssignOp.new,
+                'and' => AndOp.new,
+                'or'  => OrOp.new
             } )
         end
 
@@ -42,5 +44,6 @@ class Utils
     end
 
     def self.control_keyword(token)
+        token.to_sym if [:then, :while, :else, :end].include? token.to_sym
     end
 end

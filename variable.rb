@@ -49,6 +49,14 @@ class Variable
         #puts "Value = #{self.value}"
     end
 
+    def true?
+        !false?
+    end
+
+    def false?
+        type.is_a?(FPLNull) || (type.is_a?(FPLBool) && !value)
+    end
+
     def load
         read_variable(self) if @path
     end
