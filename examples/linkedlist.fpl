@@ -1,0 +1,36 @@
+append val head 2 fun
+    new_node heap =
+    new_node deref obj =
+    new_node deref "next" at head =
+    new_node deref "value" at val =
+    new_node
+end =
+
+list_head heap =
+list_head deref obj =
+
+list_head deref "value" at null =
+list_head deref "next" at null =
+
+i 0 =
+i 10 < while
+    list_head i list_head append call =
+    i i 1 + =
+end
+
+node_ptr list_head =
+j 0 =
+node_ptr deref "next" at null != while
+    "index: " j str + "  value: " + node_ptr deref "value" at str + put
+    node_ptr node_ptr deref "next" at =
+    j j 1 + =
+end
+
+node_ptr list_head =
+node_ptr deref "next" at null != while
+    del_ptr node_ptr =
+    node_ptr node_ptr deref "next" at =
+    del_ptr deref delete
+end
+
+node_ptr list_head =
