@@ -1,0 +1,56 @@
+insert node_ptr value cmp ins_ptr 4 fun
+    node_ptr deref null == then
+        new_node heap =
+        new_node deref obj =
+        new_node deref "left" at null =
+        new_node deref "right" at null =
+        new_node deref "value" at value =
+        node_ptr deref new_node =
+        exit
+    end
+    node_ptr deref deref "value" at value cmp deref call then
+        node_ptr deref deref "right" at ref value cmp ins_ptr ins_ptr deref call
+    else
+        node_ptr deref deref "left" at ref value cmp ins_ptr ins_ptr deref call
+    end
+end =
+
+print root prt_ptr 2 fun
+    root null == then exit end
+
+    root deref "left" at prt_ptr prt_ptr deref call
+
+    root deref "value" at put
+
+    root deref "right" at prt_ptr prt_ptr deref call
+end =
+
+delete_bst root del_ptr 2 fun
+    root null == then exit end
+
+    root deref "left" at del_ptr del_ptr deref call
+
+    root deref "right" at del_ptr del_ptr deref call
+
+    root deref delete
+end =
+
+root null =
+
+cmp a b 2 fun
+    a b >
+end =
+
+i 0 =
+i 10 < while
+    n 0 100 rand =
+    root ref n cmp ref insert ref insert call
+    n put
+    i i 1 + =
+end
+
+"Sorted:" put
+
+root print ref print call
+
+root delete_bst ref delete_bst call

@@ -87,12 +87,13 @@ class FPLFunction
             index+=1
         end
 
-        retval = stack.empty? ? Variable.new : stack.pop
-
-        ret = Variable.new
-        ret.type = retval.type.class
-        ret.value = retval.value
-        prev_stack.push(ret)
+        unless stack.empty?
+            retval = stack.pop
+            ret = Variable.new
+            ret.type = retval.type.class
+            ret.value = retval.value
+            prev_stack.push(ret)
+        end
 
         unless use_this_stack
             Dir.chdir('..')

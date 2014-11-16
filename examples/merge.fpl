@@ -47,7 +47,7 @@ end =
 
 arr obj =
 
-size 100 =
+size 20 =
 i 0 =
 i size < while
     arr i at 0 100 rand =

@@ -126,8 +126,8 @@ class DerefOp < Operator
 
     def execute(stack)
         ptr = stack.pop
-        raise FPLError,
-              'Deref called on non-pointer' unless ptr.type.is_a? FPLPointer
+        #raise FPLError,
+        #      'Deref called on non-pointer' unless ptr.type.is_a? FPLPointer
         var = Variable.new(ptr.value)
         stack.push(var)
     end
@@ -149,7 +149,7 @@ class OutputOp < Operator
 end 
 class InputOp < Operator
     def num_operands
-        1
+        0
     end
 
     def name
@@ -158,9 +158,27 @@ class InputOp < Operator
 
     def execute(stack)
         line = STDIN.gets.chomp
+        str = Variable.new
+        str.type = FPLString
+        str.value = line
+        stack.push(str)
+    end
+end
+
+class EvalOp < Operator
+    def num_operands
+        1
+    end
+
+    def name
+        'eval'
+    end
+
+    def execute(stack)
+        val = stack.pop.value.to_s
         fun = Variable.new(File.join(Dir.pwd, "call"))
         fun.type = FPLFunction
-        fun.value = [[], Parser.parse(line)]
+        fun.value = [[], Parser.parse(val)]
         fun.type.execute(stack, true)
     end
 end

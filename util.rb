@@ -52,7 +52,8 @@ class Utils
             'rand'  => RandOp.new,
             'str'   => StringOp.new,
             'num'   => NumOp.new,
-            'null'  => NullOp.new
+            'null'  => NullOp.new,
+            'eval'  => EvalOp.new
         } )
 
         return @operators[token]
