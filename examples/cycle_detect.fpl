@@ -1,0 +1,47 @@
+has_cycle list_head 1 fun
+    ptr1 list_head deref "next" at =
+    ptr2 list_head =
+
+    ptr1 null != ptr2 null != && while
+        ptr1 ptr2 == then
+            true exit
+        else
+            ptr1 ptr1 deref "next" at =
+            ptr1 null != then
+                ptr1 ptr1 deref "next" at =
+            else
+                false exit
+            end
+            ptr2 ptr2 deref "next" at =
+        end
+    end
+    false exit
+end =
+
+append val head 2 fun
+    new_node heap =
+    new_node deref obj =
+    new_node deref "next" at head =
+    new_node deref "value" at val =
+    new_node
+end =
+
+
+list_head heap =
+list_head deref obj =
+list_head deref "value" at null =
+list_head deref "next" at null =
+
+list_tail list_head =
+
+i 0 =
+i 10 < while
+    list_head i list_head append call =
+    i i 1 + =
+end
+
+# create cycle
+list_tail deref "next" at list_head =
+
+get
+list_head has_cycle call put
