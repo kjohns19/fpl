@@ -1,10 +1,15 @@
+require_relative 'function.rb'
+require_relative 'types.rb'
+require_relative 'io.rb'
+
 class Variable
-    @@types = { bool:     FPLBool,
-                number:   FPLNumber,
-                string:   FPLString,
-                function: FPLFunction,
-                pointer:  FPLPointer,
-                object:   FPLObject }
+    @@types = { FPLBool:     FPLBool,
+                FPLNumber:   FPLNumber,
+                FPLString:   FPLString,
+                FPLFunction: FPLFunction,
+                FPLPointer:  FPLPointer,
+                FPLObject:   FPLObject,
+                FPLNull:     FPLNull }
 
     def self.typeFromValue(value)
         case value.class
@@ -65,7 +70,10 @@ class Variable
             self.load
             variable.load
 
-            val = self.value.send(#{op.inspect}, value.value)
+            puts \"Self: \#{self.value}\"
+            puts \"Var:  \#{variable.value}\"
+            puts \"Op: #{op}\"
+            val = self.value.send(#{op.inspect}, variable.value)
 
             result = Variable.new
             result.type = typeFromValue(val)

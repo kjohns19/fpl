@@ -1,4 +1,7 @@
-require 'operator.rb'
+require_relative 'operator.rb'
+require_relative 'util.rb'
+require_relative 'variable.rb'
+require_relative 'types.rb'
 
 class BinaryOp < Operator
     def initialize(op)
@@ -8,6 +11,9 @@ class BinaryOp < Operator
     def execute(stack)
         val2 = stack.pop
         val1 = stack.pop
+        # puts "val1: #{val1}"
+        # puts "val2: #{val2}"
+        # puts "op:   #{@op}"
         result = val1.send(@op, val2)
         stack.push(result)
     end

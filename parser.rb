@@ -1,7 +1,9 @@
-require 'types.rb'
+require_relative 'types.rb'
+require_relative 'variable.rb'
+require_relative 'util.rb'
 
 class Parser
-    def parse(str)
+    def self.parse(str)
         str.scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
             var = nil
             if token =~ /^\d+(\.\d+)?$/

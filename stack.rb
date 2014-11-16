@@ -1,9 +1,10 @@
-require 'operator.rb'
-require 'util.rb'
+require_relative 'operator.rb'
+require_relative 'util.rb'
 
 class Stack
-    def initilize
+    def initialize
         @stack = []
+        puts "stck init"
     end
 
     def push(val)
@@ -16,6 +17,9 @@ class Stack
                 val.path = Utils.generate_temp_path
             end
             @stack << val
+            puts @stack
+            val.save
+            puts File.readlines(val.path).join("")
         end
     end
 

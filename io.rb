@@ -1,12 +1,11 @@
-require 'FileUtils'
-require 'object.rb'
+require 'fileutils.rb'
 
 def read_variable(variable)
     begin
         # If directory, type is object, value is list of variables in folder
         contents = File.readlines(variable.path)
-        variable.type = contents[0]
-        variable.value = contents.drop(1).join("\n")
+        variable.type = contents[0].chomp
+        variable.value = contents.drop(1).join("")
     rescue
         variable.type = FPLNull
         variable.value = nil
@@ -14,17 +13,18 @@ def read_variable(variable)
 end
 
 def write_variable(variable)
-    if variable.type.is_a? Object 
+    if variable.type.is_a? FPLObject 
         Dir.mkdir variable.path
         variable.value.each { |v| write_variable(v) }
     else
-        File.open(variable, "w") do |f|
-            f.puts(variable.type)
+        File.open(variable.path, "w") do |f|
+            f.puts(variable.type.class.name)
             f.puts(variable.value)
         end
     end
 end
 
 def delete_variable(variable)
+    puts variable.path
     FileUtils.rm_r(variable.path)
 end

@@ -1,6 +1,7 @@
-require 'parser.rb'
-require 'stack.rb'
-require 'FileUtils'
+require_relative 'parser.rb'
+require_relative 'stack.rb'
+require_relative 'variable.rb'
+require 'fileutils.rb'
 
 class FPLFunction
     def initialize(variable)
