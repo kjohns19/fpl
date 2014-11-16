@@ -46,7 +46,9 @@ class Utils
                 'ref'   => RefOp.new,
                 'deref' => DerefOp.new,
                 'heap'  => HeapOp.new,
-                'delete'=> DeleteOp.new
+                'delete'=> DeleteOp.new,
+                'pop'   => PopOp.new,
+                'call'  => CallOp.new
             } )
         end
 
@@ -54,6 +56,6 @@ class Utils
     end
 
     def self.control_keyword(token)
-        token.to_sym if [:exit, :then, :while, :else, :end].include? token.to_sym
+        token.to_sym if [:exit, :fun, :then, :while, :else, :end].include? token.to_sym
     end
 end

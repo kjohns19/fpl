@@ -6,7 +6,10 @@ require_relative 'types.rb'
 class BinaryOp < Operator
     def initialize(op)
         @op = op
+        @name = op
     end
+
+    attr_reader :name
 
     def num_operands
         2
@@ -23,7 +26,10 @@ end
 class UnaryOp < Operator
     def initialize(op)
         @op = op
+        @name = op
     end
+
+    attr_reader :name
 
     def num_operands
         1
@@ -41,6 +47,10 @@ class AndOp < Operator
         2
     end
 
+    def name
+        'and'
+    end
+
     def execute(stack)
         val2 = stack.pop.true?
         val1 = stack.pop.true?
@@ -54,6 +64,10 @@ end
 class OrOp < Operator
     def num_operands
         2
+    end
+
+    def name
+        'or'
     end
 
     def execute(stack)
@@ -71,6 +85,10 @@ class ObjOp < Operator
         0
     end
 
+    def name
+        'obj'
+    end
+
     def execute(stack)
         var = Variable.new
         var.type = FPLObject
@@ -82,6 +100,10 @@ end
 class RefOp < Operator
     def num_operands
         1
+    end
+
+    def name
+        'ref'
     end
 
     def execute(stack)
@@ -98,6 +120,10 @@ class DerefOp < Operator
         1
     end
 
+    def name
+        'deref'
+    end
+
     def execute(stack)
         ptr = stack.pop
         raise FPLError,
@@ -112,6 +138,10 @@ class OutputOp < Operator
         0
     end
 
+    def name
+        'put'
+    end
+
     def execute(stack)
         var = stack.pop
         puts var.value
@@ -120,6 +150,10 @@ end
 class InputOp < Operator
     def num_operands
         1
+    end
+
+    def name
+        'get'
     end
 
     def execute(stack)
@@ -133,9 +167,13 @@ class AssignOp < Operator
         0
     end
 
+    def name
+        '='
+    end
+
     def execute(stack)
         val = stack.pop
-        var = stack.pop
+        var = stack.pop(false)
         var.type = val.type.class
         var.value = val.value
         var.save
@@ -145,6 +183,10 @@ end
 class HeapOp < Operator
     def num_operands
         0
+    end
+
+    def name
+        'heap'
     end
 
     def execute(stack)
@@ -160,8 +202,48 @@ class DeleteOp < Operator
         0
     end
 
+    def name
+        'delete'
+    end
+
     def execute(stack)
         val = stack.pop
         val.delete
+    end
+end
+
+class PopOp < Operator
+    def num_operands
+        0
+    end
+
+    def name
+        'pop'
+    end
+
+    def execute(stack)
+        stack.pop
+    end
+end
+
+class CallOp < Operator
+    def num_operands
+        0
+    end
+
+    def name
+        'call'
+    end
+
+    def execute(stack)
+        fun = stack.pop
+        fun.type.execute(stack)
+        ret = Variable.new('_return')
+        ret.load
+
+        var = Variable.new
+        var.type = ret.type.class
+        var.value = ret.value
+        stack.push(var)
     end
 end

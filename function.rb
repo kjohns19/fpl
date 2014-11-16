@@ -9,10 +9,16 @@ class FPLFunction
     end
 
     def value=(value)
-        @value = value
-        arr = value.split("\n")
-        @args = arr[0].split(' ')
-        @code = Parser.parse(arr.drop(1).join("\n"))
+        if value.is_a? String
+            @value = value
+            arr = value.split("\n")
+            @args = arr[0].split(' ')
+            @code = Parser.parse(arr.drop(1).join("\n"))
+        else
+            @args = value[0]
+            @code = value[1]
+            @value = "#{@args.join(' ')}\n#{@code.map { |v| v.is_a?(Symbol) ? v.to_s : v.name }.join(' ')}"
+        end
     end
 
     def value
@@ -20,15 +26,18 @@ class FPLFunction
     end
 
     def execute(stack)
-        Dir.mkdir @variable.path
+        funcname = File.basename(@variable.path)
+        funcpath = File.join(File.dirname(@variable.path), "f_#{funcname}")
+
+        Dir.mkdir funcpath
         @args.each do |arg|
             value = stack.pop
-            var = Variable.new(File.join(@variable.path, arg))
+            var = Variable.new(File.join(funcpath, arg))
             var.type = value.type.class
             var.value = value.value
             var.save
         end
-        Dir.chdir @variable.path
+        Dir.chdir funcpath
 
         flowstack = []
 
@@ -52,7 +61,7 @@ class FPLFunction
         ret.value = retval.value
         ret.save
 
-        FileUtils.rm_r(@variable.path)
+        FileUtils.rm_r(funcpath)
     end
 
     def skip_to(index, syms)
@@ -61,7 +70,7 @@ class FPLFunction
             index+=1
             val = @code[index]
             next unless val.is_a? Symbol
-            count+=1 if val == :while || val == :then
+            count+=1 if [:while, :then, :fun].include? val
             count-=1 if syms.include? val
             break if count.zero?
         end
@@ -98,10 +107,23 @@ class FPLFunction
             flowstack << [:then, index]
             val = stack.pop
             if val.false?
-                index = skip_to(index+1, [:end, :else])
+                index = skip_to(index+1, [:end, :else])-1
+                index+=1 if @code[index+1] == :else
             end
         elsif var == :else
-            index = skip_to(index+1, [:end])
+            index = skip_to(index+1, [:end])-1
+        elsif var == :fun
+            start_i = index+1
+            end_i = skip_to(index+1, [:end])-1
+
+            args = stack.pop.value.to_i.times.map { stack.pop(false).name }
+            code = @code[start_i..end_i]
+
+            variable = Variable.new
+            variable.type = FPLFunction
+            variable.value = [args, code]
+            stack.push(variable)
+            index = end_i+1
         end
         return index
     end

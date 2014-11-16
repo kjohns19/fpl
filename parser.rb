@@ -8,21 +8,21 @@ class Parser
             #puts "Token: <#{token}>"
             var = nil
             if token =~ /^\d+(\.\d+)?$/
-                var = Variable.new
+                var = Variable.new(nil, token)
                 var.type = FPLNumber
                 var.value = token
             elsif token =~ /^".*"$/
-                var = Variable.new
+                var = Variable.new(nil, token)
                 var.type = FPLString
                 var.value = token[1..-2]
             elsif token == 'true' || token == 'false'
-                var = Variable.new
+                var = Variable.new(nil, token)
                 var.type = FPLBool
                 var.value = token
             else
                 var = Utils.operator(token)
                 var||=Utils.control_keyword(token)
-                var||=Variable.new(token.gsub(',', '/'))
+                var||=Variable.new(token.gsub(',', '/'), token)
             end
             next var
         end

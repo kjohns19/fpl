@@ -24,10 +24,10 @@ class Stack
         end
     end
 
-    def pop
+    def pop(do_load = true)
         var = @stack.pop
         if var
-            var.load
+            var.load if do_load
             #puts "Read #{var.value} from #{var.path}"
             var.delete if var.is_temp?
         else

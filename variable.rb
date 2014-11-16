@@ -23,11 +23,13 @@ class Variable
         end
     end
 
-    def initialize(path = nil)
+    def initialize(path = nil, name = nil)
         @path = path
+        @name = name
         @type = FPLNull.new(self)
     end
 
+    attr_reader :name
     attr_reader :type
     attr_accessor :path
 

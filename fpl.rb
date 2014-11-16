@@ -14,7 +14,7 @@ Dir.chdir 'fpl'
 Utils.base_path = Dir.pwd
 main = Variable.new(File.join(Dir.pwd, "main"))
 main.type = FPLFunction
-main.value = "\n#{code}"
+main.value = [[], Parser.parse(code)]
 main.type.execute(Stack.new)
 ret = Variable.new('_return')
 ret.load
