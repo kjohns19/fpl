@@ -23,8 +23,19 @@ end
 def write_variable(variable)
     puts "Saving #{variable.value} to #{variable.path}"
     if variable.type.is_a? FPLObject 
+        FileUtils.rm_r variable.path if File.exist? variable.path
         Dir.mkdir variable.path
-        variable.value.each { |v| write_variable(v) }
+        puts "Saving result!"
+        variable.value.each do |v|
+            newpath = File.join(variable.path, File.basename(v))
+            puts "Saving #{v} to #{newpath}"
+            old = Variable.new(v)
+            old.load
+            var = Variable.new(newpath)
+            var.type = old.type.class
+            var.value = old.value
+            var.save
+        end
     else
         File.open(variable.path, "w") do |f|
             f.puts(variable.type.class.name)

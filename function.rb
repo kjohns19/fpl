@@ -2,6 +2,10 @@ require_relative 'parser.rb'
 require_relative 'stack.rb'
 require_relative 'variable.rb'
 require 'fileutils.rb'
+require_relative 'colors.rb'
+
+class FPLException < StandardError
+end
 
 class FPLFunction
     def initialize(variable)
@@ -21,21 +25,30 @@ class FPLFunction
         end
     end
 
+    def arg_count
+        @args.size
+    end
+
     def value
         @value
     end
 
     def execute(stack)
         funcname = File.basename(@variable.path)
-        funcpath = File.join(File.dirname(@variable.path), "f_#{funcname}")
+        funcpath = File.join(Dir.pwd, "f_#{funcname}")
+        puts "New function #{funcname} from #{Dir.pwd}"
 
         Dir.mkdir funcpath
         @args.each do |arg|
             value = stack.pop
-            var = Variable.new(File.join(funcpath, arg))
-            var.type = value.type.class
-            var.value = value.value
-            var.save
+            if value
+                var = Variable.new(File.join(funcpath, arg))
+                var.type = value.type.class
+                var.value = value.value
+                var.save
+            else
+                puts "No value for #{arg}"
+            end
         end
         Dir.chdir funcpath
 
@@ -45,10 +58,27 @@ class FPLFunction
         index = 0
         while index < @code.size
             var = @code[index]
-            if var.is_a? Symbol
-                index = handle_control(var, index, stack, flowstack)
-            else
-                stack.push(var)
+
+            begin
+                if var.is_a? Symbol
+                    puts "#{index}: #{var}"
+                    index = handle_control(var, index, stack, flowstack)
+                else
+                    puts "#{index}: #{var.name}"
+                    stack.push(var)
+                end
+            rescue => err
+                unless err.is_a? FPLException
+                    puts "Error occurred: #{err}"
+                    puts err.backtrace.take(15).join("\n\t")
+                    puts "\nFPL Backtrace:\n"
+                end
+                arr = @code.each_with_index.map do |c, i|
+                    c.is_a?(Symbol) ? c.to_s : i == index ? c.name.bold.reverse_color : c.name
+                end.join(' ')
+                puts "#{funcname}:#{index}:   #{arr}\n\n"
+                raise FPLException.new
+                exit
             end
             index+=1
         end
@@ -91,7 +121,12 @@ class FPLFunction
                     index-=1
 
                     val = @code[index]
-                    needed+=val.num_operands if val.is_a? Operator
+                    if val.is_a? Operator
+                        needed+=val.num_operands
+                    elsif val.type.is_a? FPLFunction
+                        val.load
+                        needed+=val.arg_count
+                    end
 
                     break if needed.zero?
                 end

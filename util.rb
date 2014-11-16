@@ -6,7 +6,7 @@ class Utils
     end
 
     def self.absolute_path(path)
-        File.join(Dir.pwd, path)
+        path.start_with?('/') ? path : File.join(Dir.pwd, path)
     end
 
     def self.generate_temp_path
@@ -31,26 +31,25 @@ class Utils
     end
 
     def self.operator(token)
-        unless @operators
-            @operators = self.binary_operators.map do |op|
-                { op => BinaryOp.new(op) }
-            end.reduce(:merge).merge(self.unary_operators.map do |op|
-                { op => UnaryOp.new(op) }
-            end.reduce(:merge))
-            @operators.merge!( {
-                'put'   => OutputOp.new,
-                'get'   => InputOp.new,
-                '='     => AssignOp.new,
-                'and'   => AndOp.new,
-                'or'    => OrOp.new,
-                'ref'   => RefOp.new,
-                'deref' => DerefOp.new,
-                'heap'  => HeapOp.new,
-                'delete'=> DeleteOp.new,
-                'pop'   => PopOp.new,
-                'call'  => CallOp.new
-            } )
-        end
+        @operators ||= self.binary_operators.map do |op|
+            { op => BinaryOp.new(op) }
+        end.reduce(:merge).merge(self.unary_operators.map do |op|
+            { op => UnaryOp.new(op) }
+        end.reduce(:merge)).merge( {
+            'put'   => OutputOp.new,
+            'get'   => InputOp.new,
+            '='     => AssignOp.new,
+            'and'   => AndOp.new,
+            'or'    => OrOp.new,
+            'ref'   => RefOp.new,
+            'deref' => DerefOp.new,
+            'heap'  => HeapOp.new,
+            'delete'=> DeleteOp.new,
+            'pop'   => PopOp.new,
+            'call'  => CallOp.new,
+            'obj'   => ObjOp.new,
+            'at'    => AtOp.new
+        } )
 
         return @operators[token]
     end

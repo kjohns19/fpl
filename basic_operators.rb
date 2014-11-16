@@ -107,10 +107,10 @@ class RefOp < Operator
     end
 
     def execute(stack)
-        var = stack.pop
+        var = stack.pop(false)
         pointer = Variable.new
         pointer.type = FPLPointer
-        pointer.value = Utils.absolutePath(var.path)
+        pointer.value = Utils.absolute_path(var.path)
         stack.push(pointer)
     end
 end
@@ -144,7 +144,7 @@ class OutputOp < Operator
 
     def execute(stack)
         var = stack.pop
-        puts var.value
+        puts "Value: #{var.value}"
     end
 end 
 class InputOp < Operator
@@ -245,5 +245,22 @@ class CallOp < Operator
         var.type = ret.type.class
         var.value = ret.value
         stack.push(var)
+    end
+end
+
+class AtOp < Operator
+    def num_operands
+        2
+    end
+
+    def name
+        'at'
+    end
+
+    def execute(stack)
+        index = stack.pop.value
+        obj = stack.pop(false)
+        path = File.join(Utils.absolute_path(obj.path), index.to_s)
+        stack.push(Variable.new(path))
     end
 end

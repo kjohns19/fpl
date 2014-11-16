@@ -4,7 +4,8 @@ require_relative 'util.rb'
 
 class Parser
     def self.parse(str)
-        str.split("\n").join(' ').scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
+        str.split("\n").reject { |s| s.start_with? '#' }.join(' ').
+        scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
             #puts "Token: <#{token}>"
             var = nil
             if token =~ /^\d+(\.\d+)?$/
@@ -22,7 +23,7 @@ class Parser
             else
                 var = Utils.operator(token)
                 var||=Utils.control_keyword(token)
-                var||=Variable.new(token.gsub(',', '/'), token)
+                var||=Variable.new(token.gsub('.', '/'), token)
             end
             next var
         end

@@ -18,7 +18,14 @@ class FPLNumber
     end
 
     def value=(value)
-        @value = value.to_f
+        if value.is_a? String
+            @value = value['.'] ? value.to_f : value.to_i
+        elsif value.is_a? Numeric
+            @value = value
+        else
+            puts "Cannot convert #{value} to number"
+            @value = 0
+        end
     end
 end
 
