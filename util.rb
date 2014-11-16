@@ -10,15 +10,15 @@ class Utils
     end
 
     def self.generate_temp_path
-        @p||=0
-        @p += 1
-        return File.join(@base_path, "tmp", "#{@p}")
+        @tp||=0
+        @tp += 1
+        return File.join(@base_path, "tmp", "#{@tp}")
     end
 
     def self.generate_heap_path
         @hp||=0
-        @tp += 1
-        return File.join(@base_path, "heap", "#{@tp}")
+        @hp += 1
+        return File.join(@base_path, "heap", "#{@hp}")
     end
 
     def self.binary_operators
@@ -42,10 +42,10 @@ class Utils
                 'get'   => InputOp.new,
                 '='     => AssignOp.new,
                 'and'   => AndOp.new,
-                'or'    => OrOp.new
-                'ref'   => RefOp.new
-                'deref' => DerefOp.new
-                'heap'  => HeapOp.new
+                'or'    => OrOp.new,
+                'ref'   => RefOp.new,
+                'deref' => DerefOp.new,
+                'heap'  => HeapOp.new,
                 'delete'=> DeleteOp.new
             } )
         end
