@@ -10,7 +10,11 @@ class Stack
 		if val.is_a? Operator
 			val.execute(self)
 		else
-            val.path||=Utils.generate_temp_path
+            if val.path
+                val.path = Utils.absolute_path(val.path)
+            else
+                val.path = Utils.generate_temp_path
+            end
 			@stack << val
 		end
 	end
