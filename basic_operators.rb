@@ -281,16 +281,54 @@ class RandOp < Operator
     end
 end
 
-class QuitOp < Operator
+class StringOp < Operator
+    def num_operands
+        1
+    end
+
+    def name
+        'str'
+    end
+
+    def execute(stack)
+        val1 = stack.pop.value
+
+        result = Variable.new
+        result.type = FPLString
+        result.value = val1.to_s
+        stack.push(result)
+    end
+end
+
+class NumOp < Operator
+    def num_operands
+        1
+    end
+
+    def name
+        'num'
+    end
+
+    def execute(stack)
+        val1 = stack.pop.value
+
+        result = Variable.new
+        result.type = FPLNumber
+        result.value = val1
+        stack.push(result)
+    end
+end
+
+class NullOp < Operator
     def num_operands
         0
     end
 
     def name
-        'quit'
+        'null'
     end
-
+    
     def execute(stack)
-        raise FLPQuit
+        stack.push(Variable.new)
     end
 end

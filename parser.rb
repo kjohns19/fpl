@@ -4,7 +4,7 @@ require_relative 'util.rb'
 
 class Parser
     def self.parse(str)
-        str.split("\n").reject { |s| s.start_with? '#' }.join(' ').
+        str.split("\n").reject { |s| s.strip.start_with? '#' }.join(' ').
         scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
             #puts "Token: <#{token}>"
             var = nil

@@ -20,11 +20,12 @@ main.value = [[], Parser.parse(code)]
 stack = Stack.new
 begin
     main.type.execute(stack)
-rescue
+rescue => err
     Dir.chdir basedir
     FileUtils.rm_r('fpl')
-    exit 1
+    exit
 end
 
 puts "Return Value: #{stack.pop.value}"
 Dir.chdir ".."
+FileUtils.rm_r('fpl')

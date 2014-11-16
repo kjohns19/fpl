@@ -39,7 +39,7 @@ class Utils
             'put'   => OutputOp.new,
             'get'   => InputOp.new,
             '='     => AssignOp.new,
-            '&&'   => AndOp.new,
+            '&&'    => AndOp.new,
             '||'    => OrOp.new,
             'ref'   => RefOp.new,
             'deref' => DerefOp.new,
@@ -50,13 +50,15 @@ class Utils
             'obj'   => ObjOp.new,
             'at'    => AtOp.new,
             'rand'  => RandOp.new,
-            'quit'  => QuitOp.new
+            'str'   => StringOp.new,
+            'num'   => NumOp.new,
+            'null'  => NullOp.new
         } )
 
         return @operators[token]
     end
 
     def self.control_keyword(token)
-        token.to_sym if [:exit, :fun, :then, :while, :else, :end].include? token.to_sym
+        token.to_sym if [:quit, :exit, :fun, :then, :while, :else, :end].include? token.to_sym
     end
 end

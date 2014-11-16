@@ -60,6 +60,3 @@ class FPLNull
         @variable = variable
     end
 end
-
-class FPLQuit < StandardError
-end

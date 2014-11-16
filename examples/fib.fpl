@@ -1,9 +1,23 @@
 fib i fibptr 2 fun
-    i 1 <= then
-        1 exit
+    i 0 <= then
+        0 exit
     else
-        i 1 - fibptr fibptr deref call i 2 - fibptr fibptr deref call +
+        i 1 == then
+            1 exit
+        else
+            i 1 - fibptr fibptr deref call i 2 - fibptr fibptr deref call +
+        end
     end
 end =
 
+fastfib a b n fibptr 4 fun
+    n 0 == then
+        a exit
+    end
+    b a b + n 1 - fibptr fibptr deref call
+end =
+
+"Slow fib:" put
 20 fib ref fib call put
+"Fast fib:" put
+0 1 20 fastfib ref fastfib call put

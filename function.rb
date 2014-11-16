@@ -3,8 +3,11 @@ require_relative 'stack.rb'
 require_relative 'variable.rb'
 require 'fileutils.rb'
 require_relative 'colors.rb'
+require_relative 'types.rb'
 
 class FPLException < StandardError
+end
+class FPLQuit < StandardError
 end
 
 class FPLFunction
@@ -67,6 +70,9 @@ class FPLFunction
                     stack.push(var)
                 end
             rescue => err
+                if err.is_a? FPLQuit
+                    raise err
+                end
                 unless err.is_a? FPLException
                     puts "Error occurred: #{err}"
                     puts err.backtrace.take(15).join("\n\t")
@@ -77,7 +83,6 @@ class FPLFunction
                 end.join(' ')
                 puts "#{funcname}:#{index}:   #{arr}\n\n"
                 raise FPLException.new
-                exit
             end
             index+=1
         end
@@ -109,7 +114,9 @@ class FPLFunction
     end
 
     def handle_control(var, index, stack, flowstack)
-        if var == :exit
+        if var == :quit
+            raise FPLQuit
+        elsif var == :exit
             return @code.size
         elsif var == :end
             last, lastindex = flowstack.pop
