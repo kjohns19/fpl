@@ -32,11 +32,15 @@ class Utils
                 { op => UnaryOp.new(op) }
             end.reduce(:merge))
             @operators.merge!( {
-                'put' => OutputOp.new,
-                'get' => InputOp.new,
-                '='   => AssignOp.new,
-                'and' => AndOp.new,
-                'or'  => OrOp.new
+                'put'   => OutputOp.new,
+                'get'   => InputOp.new,
+                '='     => AssignOp.new,
+                'and'   => AndOp.new,
+                'or'    => OrOp.new
+                'ref'   => RefOp.new
+                'deref' => DerefOp.new
+                'heap'  => HeapOp.new
+                'delete'=> DeleteOp.new
             } )
         end
 
@@ -44,6 +48,6 @@ class Utils
     end
 
     def self.control_keyword(token)
-        token.to_sym if [:then, :while, :else, :end].include? token.to_sym
+        token.to_sym if [:exit, :then, :while, :else, :end].include? token.to_sym
     end
 end
