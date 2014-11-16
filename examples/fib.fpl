@@ -1,0 +1,9 @@
+fib i fibptr 2 fun
+    i 1 <= then
+        1 exit
+    else
+        i 1 - fibptr fibptr deref call i 2 - fibptr fibptr deref call +
+    end
+end =
+
+30 fib ref fib call put
