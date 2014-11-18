@@ -160,7 +160,8 @@ class FPLFunction
             start_i = index+1
             end_i = skip_to(index+1, [:end])-1
 
-            args = stack.pop.value.to_i.times.map { stack.pop(false).name }
+            count = stack.pop.value.to_i
+            args = count.times.map { stack.pop(false).name }
             code = @code[start_i..end_i]
 
             variable = Variable.new

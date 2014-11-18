@@ -30,7 +30,10 @@ class Variable
         @type = FPLNull.new(self)
     end
 
-    attr_reader :name
+    def name
+        @name ? @name : File.basename(@path)
+    end
+
     attr_reader :type
     attr_accessor :path
 

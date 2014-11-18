@@ -19,6 +19,7 @@ print root prt_ptr 2 fun
     root null == then exit end
 
     root deref "left" at prt_ptr prt_ptr deref call
+    get
 
     root deref "value" at put
 

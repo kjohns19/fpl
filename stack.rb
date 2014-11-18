@@ -1,9 +1,18 @@
 require_relative 'operator.rb'
 require_relative 'util.rb'
+require_relative 'types.rb'
+
+require 'fileutils.rb'
 
 class Stack
     def initialize
-        @stack = []
+        @dir = File.join(Dir.pwd, '_stack')
+        FileUtils.mkdir_p @dir
+        sizeVar = Variable.new(File.join(@dir, 'size'))
+        sizeVar.type = FPLNumber
+        sizeVar.value = 0
+        sizeVar.save
+        #puts "New stack created at #{@dir}"
     end
 
     def push(val)
@@ -17,16 +26,31 @@ class Stack
             else
                 val.path = Utils.generate_temp_path
             end
-            @stack << val
-            #puts "Stack: #{@stack.inspect}"
+            sizeVar = Variable.new(File.join(@dir, 'size'))
+            sizeVar.load
+
+            ptr = Variable.new(File.join(@dir, sizeVar.value.to_s))
+            ptr.type = FPLPointer
+            ptr.value = val.path
+            ptr.save
+
+            #puts "Pushing #{val.path} to #{@dir}"
+
+            sizeVar.value+=1
+            sizeVar.save
+
             val.save if val.is_temp?
-            #puts File.readlines(val.path).join("")
         end
     end
 
     def pop(do_load = true)
-        var = @stack.pop
-        if var
+        mysize = sizeVar
+        if mysize.value > 0
+            mysize.value-=1
+            mysize.save
+            var = Variable.new(File.join(@dir, mysize.value.to_s))
+            var.load
+            var = Variable.new(var.value)
             var.load if do_load
             if var.is_temp?
                 if var.type.is_a? FPLObject
@@ -41,14 +65,23 @@ class Stack
         else
             puts "Popping from empty stack"
         end
+
+        #puts "Popped #{var.path} from #{@dir}"
         return var
     end
 
-    def empty?
-        @stack.empty?
+    def size
+        sizeVar.value
     end
 
-    def peek
-        @stack.last
+    def empty?
+        self.size == 0
+    end
+
+private
+    def sizeVar
+        mysize = Variable.new(File.join(@dir, 'size'))
+        mysize.load
+        return mysize
     end
 end
