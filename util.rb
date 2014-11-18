@@ -1,6 +1,6 @@
 require_relative 'basic_operators.rb'
 
-class Utils
+module Utils
     def self.base_path=(path)
         @base_path = path
     end
@@ -22,7 +22,7 @@ class Utils
     end
 
     def self.binary_operators
-        @bin_ops||=['+', '-', '*', '**', '/', '%', '^', 'and', 'or', 
+        @bin_ops||=['+', '-', '*', '**', '/', '%', '^',
                     '<', '<=', '>', '>=', '==', '!=']
     end
 

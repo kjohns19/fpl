@@ -143,8 +143,10 @@ class OutputOp < Operator
     end
 
     def execute(stack)
-        var = stack.pop
-        puts var.value
+        unless stack.empty?
+            var = stack.pop
+            puts var.value
+        end
     end
 end 
 class InputOp < Operator
@@ -157,10 +159,10 @@ class InputOp < Operator
     end
 
     def execute(stack)
-        line = STDIN.gets.chomp
+        line = STDIN.gets
         str = Variable.new
         str.type = FPLString
-        str.value = line
+        str.value = line ? line.chomp : ''
         stack.push(str)
     end
 end
@@ -198,6 +200,7 @@ class AssignOp < Operator
         var.type = val.type.class
         var.value = val.value
         var.save
+        stack.push(var)
     end
 end
 

@@ -2,7 +2,7 @@ require_relative 'types.rb'
 require_relative 'variable.rb'
 require_relative 'util.rb'
 
-class Parser
+module Parser
     def self.parse(str)
         str.split("\n").reject { |s| s.strip.start_with? '#' }.join(' ').
         scan(/(?:"(?:\\.|[^"])*"|[^" ])+/).map do |token|
