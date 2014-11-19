@@ -19,7 +19,6 @@ print root prt_ptr 2 fun
     root null == then exit end
 
     root deref "left" at prt_ptr prt_ptr deref call
-    get
 
     root deref "value" at put
 
@@ -42,8 +41,11 @@ cmp a b 2 fun
     a b >
 end =
 
+"Enter size:" put
+size get num =
+
 i 0 =
-i 10 < while
+i size < while
     n 0 100 rand =
     root ref n cmp ref insert ref insert call
     n put

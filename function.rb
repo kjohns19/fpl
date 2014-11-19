@@ -54,11 +54,20 @@ class FPLFunction
         end
         Dir.chdir funcpath unless use_this_stack
 
+        num_pcs = Dir['_pc*'].size
+        program_counter = Variable.new("_pc#{num_pcs > 0 ? num_pcs+1 : ''}")
+        program_counter.type = FPLNumber
+        program_counter.value = 0
+        program_counter.save
+
         flowstack = []
 
         stack = use_this_stack ? prev_stack : Stack.new
-        index = 0
-        while index < @code.size
+        loop do
+
+            program_counter.load
+            index = program_counter.value
+            break unless index < @code.size
             var = @code[index]
 
             begin
@@ -85,6 +94,8 @@ class FPLFunction
                 raise FPLException.new
             end
             index+=1
+            program_counter.value = index
+            program_counter.save
         end
 
         unless stack.empty?

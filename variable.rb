@@ -64,19 +64,19 @@ class Variable
     end
 
     def load
-        read_variable(self) if @path
+        FPLIO.read_variable(self) if @path
     end
 
     def save
-        write_variable(self) if @path
+        FPLIO.write_variable(self) if @path
     end
 
     def delete
-        delete_variable(self)
+        FPLIO.delete_variable(self)
     end
 
     def is_temp?
-        File.basename(File.dirname(path)) == 'tmp'
+        File.basename(File.dirname(path)) == '_tmp'
     end
 
      Utils.binary_operators.each do |op|

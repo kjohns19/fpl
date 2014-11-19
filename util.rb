@@ -1,8 +1,30 @@
 require_relative 'basic_operators.rb'
 
+class Folder
+    def initialize(path, name)
+        @dir = File.join(path, name)
+        FileUtils.mkdir_p @dir
+
+        count = Variable.new(File.join(@dir, 'count'))
+        count.type = FPLNumber
+        count.value = 0
+        count.save
+    end
+
+    def create_path
+        count = Variable.new(File.join(@dir, 'count'))
+        count.load
+        count.value+=1
+        count.save
+        return File.join(@dir, count.value.to_s)
+    end
+end
+
 module Utils
-    def self.base_path=(path)
+    def self.init(path)
         @base_path = path
+        @heap = Folder.new(path, '_heap')
+        @tmp = Folder.new(path, '_tmp')
     end
 
     def self.absolute_path(path)
@@ -10,15 +32,11 @@ module Utils
     end
 
     def self.generate_temp_path
-        @tp||=0
-        @tp += 1
-        return File.join(@base_path, "tmp", "#{@tp}")
+        return @tmp.create_path
     end
 
     def self.generate_heap_path
-        @hp||=0
-        @hp += 1
-        return File.join(@base_path, "heap", "#{@hp}")
+        return @heap.create_path
     end
 
     def self.binary_operators

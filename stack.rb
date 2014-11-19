@@ -48,9 +48,9 @@ class Stack
         if mysize.value > 0
             mysize.value-=1
             mysize.save
-            var = Variable.new(File.join(@dir, mysize.value.to_s))
-            var.load
-            var = Variable.new(var.value)
+            ptr = Variable.new(File.join(@dir, mysize.value.to_s))
+            ptr.load
+            var = Variable.new(ptr.value)
             var.load if do_load
             if var.is_temp?
                 if var.type.is_a? FPLObject
@@ -62,6 +62,7 @@ class Stack
                 end
                 var.delete
             end
+            ptr.delete
         else
             puts "Popping from empty stack"
         end

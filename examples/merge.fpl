@@ -47,7 +47,8 @@ end =
 
 arr obj =
 
-size 20 =
+"Enter size:" put
+size get num =
 i 0 =
 i size < while
     arr i at 0 100 rand =
