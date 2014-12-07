@@ -8,7 +8,10 @@ require 'fileutils.rb'
 
 code = File.readlines(ARGV[0]).join("")
 basedir = Dir.pwd
+
+FileUtils.rm_r('fpl') if File.exist? 'fpl'
 FileUtils.mkdir_p 'fpl'
+
 Dir.chdir 'fpl'
 Utils.init(Dir.pwd)
 main = Variable.new(File.join(Dir.pwd, 'main'))

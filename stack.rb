@@ -51,20 +51,13 @@ class Stack
             ptr = Variable.new(File.join(@dir, mysize.value.to_s))
             ptr.load
             var = Variable.new(ptr.value)
-            var.load if do_load
+            var.load(true) if do_load
             if var.is_temp?
-                if var.type.is_a? FPLObject
-                    var.value = var.value.map do |v|
-                        val = Variable.new(v)
-                        val.load
-                        next val
-                    end
-                end
                 var.delete
             end
             ptr.delete
         else
-            puts "Popping from empty stack"
+            puts 'Trying to pop from empty stack'
         end
 
         #puts "Popped #{var.path} from #{@dir}"

@@ -106,10 +106,13 @@ class FPLFunction
             prev_stack.push(ret)
         end
 
-        unless use_this_stack
+        if use_this_stack
+            program_counter.delete
+        else
             Dir.chdir('..')
             FileUtils.rm_r(funcpath)
         end
+
     end
 
     def skip_to(index, syms)
@@ -119,7 +122,7 @@ class FPLFunction
             val = @code[index]
             next unless val.is_a? Symbol
             count+=1 if [:while, :then, :fun].include? val
-            count-=1 if syms.include? val
+            count-=1 if syms.include?(val) && (count == 1 || val != :else)
             break if count.zero?
         end
         return index
@@ -153,9 +156,10 @@ class FPLFunction
                 index-=1
             end
         elsif var == :while
-            flowstack << [:while, index]
             val = stack.pop
-            if val.false?
+            if val.true?
+                flowstack << [:while, index]
+            else
                 index = skip_to(index+1, [:end])
             end
         elsif var == :then

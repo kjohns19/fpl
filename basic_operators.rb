@@ -265,6 +265,39 @@ class CallOp < Operator
     end
 end
 
+class ExistOp < Operator
+    def num_operands
+        1
+    end
+
+    def name
+        'exists'
+    end
+
+    def execute(stack)
+        value = stack.pop(false)
+        result = Variable.new
+        result.type = FPLBool
+        result.value = File.exist? value.path
+        stack.push(result)
+    end
+end
+
+class SleepOp < Operator
+    def num_operands
+        1
+    end
+
+    def name
+        'sleep'
+    end
+
+    def execute(stack)
+        value = stack.pop.value.to_f
+        sleep(value/1000.0)
+    end
+end
+
 class AtOp < Operator
     def num_operands
         2

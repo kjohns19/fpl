@@ -63,8 +63,17 @@ class Variable
         type.is_a?(FPLNull) || (type.is_a?(FPLBool) && !value)
     end
 
-    def load
-        FPLIO.read_variable(self) if @path
+    def load(from_pop = false)
+        if @path
+            FPLIO.read_variable(self)
+            if from_pop && is_temp? && type.is_a?(FPLObject)
+                self.value = self.value.map do |v|
+                    val = Variable.new(v)
+                    val.load(true)
+                    next val
+                end
+            end
+        end
     end
 
     def save
@@ -76,7 +85,8 @@ class Variable
     end
 
     def is_temp?
-        File.basename(File.dirname(path)) == '_tmp'
+        # TODO make this better
+        path.split(File::SEPARATOR).include? '_tmp'
     end
 
      Utils.binary_operators.each do |op|

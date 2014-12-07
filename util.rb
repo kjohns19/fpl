@@ -71,7 +71,9 @@ module Utils
             'str'   => StringOp.new,
             'num'   => NumOp.new,
             'null'  => NullOp.new,
-            'eval'  => EvalOp.new
+            'eval'  => EvalOp.new,
+            'sleep' => SleepOp.new,
+            'exists'=> ExistOp.new
         } )
 
         return @operators[token]
