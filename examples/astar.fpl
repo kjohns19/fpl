@@ -1,0 +1,303 @@
+astar mapptr startptr goalptr 3 fun
+    ### Define some local helper functions ###
+
+    # Returns the Manhattan distance between 2 nodes
+    get_h n1 n2 2 fun
+        xd n1 deref 1000 / n2 deref 1000 / - =
+        yd n1 deref 1000 % n2 deref 1000 % - =
+        #xd n1 deref "x" at n2 deref "x" at - =
+        #yd n1 deref "y" at n2 deref "y" at - =
+        xd 0 < then xd 0 xd - = end
+        yd 0 < then yd 0 yd - = end
+        xd yd +
+    end =
+
+    # Returns the neighbors of a node
+    get_neighbors nodeptr mapptr 2 fun
+        results obj =
+        results.size 0 =
+
+        nx nodeptr deref 1000 / =
+        ny nodeptr deref 1000 % =
+        #nx nodeptr deref "x" at =
+        #ny nodeptr deref "y" at =
+
+        add mapptr rptr x y 4 fun
+            x y mapptr deref "has_obstacle" at call ! then
+                s rptr deref "size" at =
+                rptr deref s at x 1000 * y + =
+                #rptr deref s at obj =
+                #rptr deref s at "x" at x =
+                #rptr deref s at "y" at y =
+                rptr deref "size" at s 1 + =
+            end
+        end =
+
+        nx 0 > then
+            mapptr results ref nx 1 - ny add call
+        end
+        nx 1 + mapptr deref "width" at < then
+            mapptr results ref nx 1 + ny add call
+        end
+
+        ny 0 > then
+            mapptr results ref nx ny 1 - add call
+        end
+        ny 1 + mapptr deref "height" at < then
+            mapptr results ref nx ny 1 + add call
+        end
+        results
+    end =
+
+    # Returns whether a node is in a set
+    is_in_set setptr nodeptr 2 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #setptr deref idx at exists
+        setptr deref nodeptr deref at exists
+    end =
+
+    set_set setptr nodeptr set 3 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        set then
+            #setptr deref idx at true =
+            setptr deref nodeptr deref at true =
+        else
+            #setptr deref idx at exists then
+                #setptr deref idx at delete
+            setptr deref nodeptr deref at exists then
+                setptr deref nodeptr deref at delete
+            end
+        end
+    end =
+
+    # Sets a node's g score
+    set_g nodeptr g g_scores 3 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #g_scores deref idx at g =
+        g_scores deref nodeptr deref at g =
+    end =
+
+    # Sets a node's f score (g + heuristic)
+    set_f nodeptr goalptr hptr g_scores f_scores 5 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #f_scores deref idx at g_scores deref idx at
+        #    nodeptr goalptr hptr deref call + =
+        f_scores deref nodeptr deref at g_scores deref nodeptr deref at
+            nodeptr goalptr hptr deref call + =
+    end =
+
+    # Gets a node's g or f score
+    score_get nodeptr scores 2 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #scores deref idx at
+        scores deref nodeptr deref at
+    end =
+
+    # Sets a node's predecessor
+    path nodeptr predptr paths 3 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #paths deref idx at predptr deref =
+        paths deref nodeptr deref at predptr deref =
+    end =
+
+    # Gets a node's predecessor
+    path_get nodeptr paths 2 fun
+        #idx nodeptr deref "x" at 1000 * nodeptr deref "y" at + =
+        #paths deref idx at
+        paths deref nodeptr deref at
+    end =
+
+    ### Algorithm start ###
+
+    g_scores obj =
+    f_scores obj =
+    paths obj =
+
+
+    mystart startptr deref "x" at 1000 * startptr deref "y" at + =
+    startptr mystart ref =
+
+    mygoal goalptr deref "x" at 1000 * goalptr deref "y" at + =
+    goalptr mygoal ref =
+
+
+    # Closed set, initiallly empty
+    closedset obj =
+
+    # Open set, initiailly contains the start node
+    openset obj =
+    openlist obj =
+    openlist.0 startptr deref =
+
+
+    startptr 0 g_scores ref set_g call
+    startptr goalptr get_h ref g_scores ref f_scores ref set_f call
+    openlist.size 1 =
+
+
+    openlist.size 0 != while
+        # Get node in openlist with lowest f score
+        low_f 0 =
+        i 1 =
+        i openlist.size < while
+            openlist i at ref f_scores ref score_get call
+            openlist low_f at ref f_scores ref score_get call <= then
+                low_f i =
+            end
+            i i 1 + =
+        end
+        current openlist low_f at =
+
+        "Looking at: (" current 1000 / str + ", " + current 1000 % str + ")" + put
+
+        # Check if we reached the goal
+        current mygoal == then
+            result obj =
+            result.size 0 =
+
+            # Follow predecessors until we reach the start again
+            done false =
+            done ! while
+                current mystart == then
+                    done true =
+                else
+                    result result.size at obj =
+                    result result.size at "x" at current 1000 / =
+                    result result.size at "y" at current 1000 % =
+                    result.size result.size 1 + =
+                    current current ref paths ref path_get call =
+                end
+            end
+
+            result result.size at obj =
+            result result.size at "x" at mystart 1000 / =
+            result result.size at "y" at mystart 1000 % =
+            result.size result.size 1 + =
+
+            result exit
+        end
+
+        # Remove from openset and openlist
+        low_f openlist.size 1 - < then
+            openlist low_f at openlist openlist.size 1 - at =
+        end
+        openlist openlist.size 1 - at delete
+        openlist.size openlist.size 1 - =
+        openset ref current ref false set_set call
+
+        # Add current to closed set
+        closedset ref current ref true set_set call
+
+        next_g current ref g_scores ref score_get call 1 + =
+
+        neighbors current ref mapptr get_neighbors call =
+
+        # Look at each valid neighbor
+        i 0 =
+        i neighbors.size < while
+            neighbor neighbors i at ref =
+
+            closedset ref neighbor is_in_set call ! then
+                # The neighbor was not looked at yet
+                openset ref neighbor is_in_set call ! then
+                    # The neighbor isn't in the open set yet
+                    neighbor current ref paths ref path call
+                    neighbor next_g g_scores ref set_g call
+                    neighbor goalptr get_h ref g_scores ref f_scores ref set_f call
+                    openlist openlist.size at neighbor deref =
+                    openlist.size openlist.size 1 + =
+                    openset ref neighbor true set_set call
+                else
+                    next_g neighbor g_scores ref score_get < then
+                        # The current score/predecessor for the neighbor needs to change
+                        neighbor current ref paths ref path call
+                        neighbor next_g g_scores ref set_g call
+                        neighbor goalptr get_h ref g_scores ref f_scores ref set_f call
+                    end
+                end
+            end
+            i i 1 + =
+        end
+    end
+
+    # No path found
+    result obj =
+    result.size 0 =
+    result
+end =
+
+
+print_grid gridptr width height 3 fun
+    header "--" width 1 + * =
+    header put
+    y 0 =
+    y height < while
+        s "| " =
+
+        x 0 =
+        x width < while
+            s s gridptr deref y at x at + " " + =
+            x x 1 + =
+        end
+
+        s "|\n" + put
+
+        y y 1 + =
+    end
+    header put
+end =
+
+
+
+
+# Make the map
+map obj =
+map.width 5 =
+map.height 5 =
+map.has_obstacle x y 2 fun
+    x 2 == y 4 != && x 3 == y 3 == && ||
+end =
+
+# Starting node
+start obj =
+start.x 1 =
+start.y 0 =
+
+# Ending node
+goal obj =
+goal.x 3 =
+goal.y 0 =
+
+
+# Create a grid to print out
+grid obj =
+y 0 =
+y map.height < while
+    grid y at obj =
+
+    x 0 =
+    x map.width < while
+        grid y at x at x y map.has_obstacle call then "X" else " " end =
+        x x 1 + =
+    end
+    y y 1 + =
+end
+
+# Add the start/end nodes to the grid
+grid start.y at start.x at "S" =
+grid goal.y at goal.x at "F" =
+
+grid ref map.width map.height print_grid call
+
+# Run A*
+result map ref start ref goal ref astar call =
+
+# Add the path to the grid
+i 1 =
+i 1 + result.size < while
+    node result i at =
+    grid node.y at node.x at "o" =
+    i i 1 + =
+end
+
+grid ref map.width map.height print_grid call
