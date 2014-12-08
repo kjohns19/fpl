@@ -31,7 +31,7 @@ class Variable
     end
 
     def name
-        @name ? @name : File.basename(@path)
+        @name ? @name : FPL_IO.basename(@path)
     end
 
     attr_reader :type
@@ -65,7 +65,7 @@ class Variable
 
     def load(from_pop = false)
         if @path
-            FPLIO.read_variable(self)
+            FPL_IO.read_variable(self)
             if from_pop && is_temp? && type.is_a?(FPLObject)
                 self.value = self.value.map do |v|
                     val = Variable.new(v)
@@ -77,16 +77,16 @@ class Variable
     end
 
     def save
-        FPLIO.write_variable(self) if @path
+        FPL_IO.write_variable(self) if @path
     end
 
     def delete
-        FPLIO.delete_variable(self)
+        FPL_IO.delete_variable(self)
     end
 
     def is_temp?
         # TODO make this better
-        path.split(File::SEPARATOR).include? '_tmp'
+        FPL_IO.split(path).include? '_tmp'
     end
 
      Utils.binary_operators.each do |op|

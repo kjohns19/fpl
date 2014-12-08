@@ -37,14 +37,14 @@ class FPLFunction
     end
 
     def execute(prev_stack, use_this_stack = false)
-        funcname = File.basename(@variable.path)
-        funcpath = use_this_stack ? Dir.pwd : File.join(Dir.pwd, '0')
+        funcname = FPL_IO.basename(@variable.path)
+        funcpath = use_this_stack ? FPL_IO.pwd : FPL_IO.join(FPL_IO.pwd, '0')
 
-        Dir.mkdir funcpath unless use_this_stack
+        FPL_IO.mkdir funcpath unless use_this_stack
         @args.each do |arg|
             value = prev_stack.pop
             if value
-                var = Variable.new(File.join(funcpath, arg))
+                var = Variable.new(FPL_IO.join(funcpath, arg))
                 var.type = value.type.class
                 var.value = value.value
                 var.save
@@ -52,9 +52,9 @@ class FPLFunction
                 puts "No value for #{arg}"
             end
         end
-        Dir.chdir funcpath unless use_this_stack
+        FPL_IO.goto funcpath unless use_this_stack
 
-        num_pcs = Dir['_pc*'].size
+        num_pcs = FPL_IO['_pc*'].size
         program_counter = Variable.new("_pc#{num_pcs > 0 ? num_pcs+1 : ''}")
         program_counter.type = FPLNumber
         program_counter.value = 0
@@ -109,8 +109,8 @@ class FPLFunction
         if use_this_stack
             program_counter.delete
         else
-            Dir.chdir('..')
-            FileUtils.rm_r(funcpath)
+            FPL_IO.goto '..'
+            FPL_IO.rm funcpath
         end
 
     end

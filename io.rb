@@ -1,7 +1,36 @@
 require_relative 'types.rb'
 require 'fileutils.rb'
 
-module FPLIO
+module FPL_IO
+    def self.goto(path)
+        Dir.chdir path
+    end
+    def self.pwd
+        Dir.pwd
+    end
+    def self.rm(path)
+        FileUtils.rm_r(path)
+    end
+    def self.exist?(path)
+        File.exist? path
+    end
+    def self.join(*args)
+        File.join(*args)
+    end
+    def self.mkdir(path)
+        FileUtils.mkdir_p path
+    end
+    def self.[](*args)
+        Dir[*args]
+    end
+    def self.basename(path)
+        File.basename(path)
+    end
+    def self.split(path)
+        path.split(File::SEPARATOR)
+    end
+
+
     def self.read_variable(variable)
         @num_read||=0
         @num_read+=1

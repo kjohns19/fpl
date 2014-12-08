@@ -2,21 +2,21 @@ require_relative 'basic_operators.rb'
 
 class Folder
     def initialize(path, name)
-        @dir = File.join(path, name)
-        FileUtils.mkdir_p @dir
+        @dir = FPL_IO.join(path, name)
+        FPL_IO.mkdir @dir
 
-        count = Variable.new(File.join(@dir, 'count'))
+        count = Variable.new(FPL_IO.join(@dir, 'count'))
         count.type = FPLNumber
         count.value = 0
         count.save
     end
 
     def create_path
-        count = Variable.new(File.join(@dir, 'count'))
+        count = Variable.new(FPL_IO.join(@dir, 'count'))
         count.load
         count.value+=1
         count.save
-        return File.join(@dir, count.value.to_s)
+        return FPL_IO.join(@dir, count.value.to_s)
     end
 end
 
@@ -28,7 +28,7 @@ module Utils
     end
 
     def self.absolute_path(path)
-        path.start_with?('/') ? path : File.join(Dir.pwd, path)
+        path.start_with?('/') ? path : FPL_IO.join(FPL_IO.pwd, path)
     end
 
     def self.generate_temp_path

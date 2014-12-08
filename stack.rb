@@ -6,9 +6,9 @@ require 'fileutils.rb'
 
 class Stack
     def initialize
-        @dir = File.join(Dir.pwd, '_stack')
-        FileUtils.mkdir_p @dir
-        sizeVar = Variable.new(File.join(@dir, 'size'))
+        @dir = FPL_IO.join(FPL_IO.pwd, '_stack')
+        FPL_IO.mkdir @dir
+        sizeVar = Variable.new(FPL_IO.join(@dir, 'size'))
         sizeVar.type = FPLNumber
         sizeVar.value = 0
         sizeVar.save
@@ -26,10 +26,10 @@ class Stack
             else
                 val.path = Utils.generate_temp_path
             end
-            sizeVar = Variable.new(File.join(@dir, 'size'))
+            sizeVar = Variable.new(FPL_IO.join(@dir, 'size'))
             sizeVar.load
 
-            ptr = Variable.new(File.join(@dir, sizeVar.value.to_s))
+            ptr = Variable.new(FPL_IO.join(@dir, sizeVar.value.to_s))
             ptr.type = FPLPointer
             ptr.value = val.path
             ptr.save
@@ -48,7 +48,7 @@ class Stack
         if mysize.value > 0
             mysize.value-=1
             mysize.save
-            ptr = Variable.new(File.join(@dir, mysize.value.to_s))
+            ptr = Variable.new(FPL_IO.join(@dir, mysize.value.to_s))
             ptr.load
             var = Variable.new(ptr.value)
             var.load(true) if do_load
@@ -74,7 +74,7 @@ class Stack
 
 private
     def sizeVar
-        mysize = Variable.new(File.join(@dir, 'size'))
+        mysize = Variable.new(FPL_IO.join(@dir, 'size'))
         mysize.load
         return mysize
     end

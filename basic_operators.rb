@@ -178,7 +178,7 @@ class EvalOp < Operator
 
     def execute(stack)
         val = stack.pop.value.to_s
-        fun = Variable.new(File.join(Dir.pwd, "call"))
+        fun = Variable.new(FPL_IO.join(FPL_IO.pwd, "call"))
         fun.type = FPLFunction
         fun.value = [[], Parser.parse(val)]
         fun.type.execute(stack, true)
@@ -278,7 +278,7 @@ class ExistOp < Operator
         value = stack.pop(false)
         result = Variable.new
         result.type = FPLBool
-        result.value = File.exist? value.path
+        result.value = FPL_IO.exist? value.path
         stack.push(result)
     end
 end
@@ -310,7 +310,7 @@ class AtOp < Operator
     def execute(stack)
         index = stack.pop.value
         obj = stack.pop(false)
-        path = File.join(Utils.absolute_path(obj.path), index.to_s)
+        path = FPL_IO.join(Utils.absolute_path(obj.path), index.to_s)
         stack.push(Variable.new(path))
     end
 end

@@ -6,15 +6,21 @@ require_relative 'stack.rb'
 require_relative 'io.rb'
 require 'fileutils.rb'
 
+#class FPLException < StandardError
+#end
+#class FPLQuit < StandardError
+#end
+
 code = File.readlines(ARGV[0]).join("")
-basedir = Dir.pwd
 
-FileUtils.rm_r('fpl') if File.exist? 'fpl'
-FileUtils.mkdir_p 'fpl'
+basedir = FPL_IO.pwd
 
-Dir.chdir 'fpl'
-Utils.init(Dir.pwd)
-main = Variable.new(File.join(Dir.pwd, 'main'))
+FPL_IO.rm 'fpl' if FPL_IO.exist? 'fpl'
+FPL_IO.mkdir 'fpl'
+
+FPL_IO.goto 'fpl'
+Utils.init(FPL_IO.pwd)
+main = Variable.new(FPL_IO.join(FPL_IO.pwd, 'main'))
 main.type = FPLFunction
 main.value = [[], Parser.parse(code)]
 main.save
@@ -23,13 +29,14 @@ stack = Stack.new
 begin
     main.type.execute(stack)
 rescue => err
-    Dir.chdir basedir
-    FileUtils.rm_r('fpl')
+    FPL_IO.goto basedir
+    FPL_IO.rm 'fpl'
+    raise err unless err.is_a?(FPLException) || err.is_a?(FPLQuit)
     exit
 end
 
-heapdir = File.join(basedir, 'fpl', 'heap', '*')
-heapcontents = Dir[heapdir]
+heapdir = FPL_IO.join(basedir, 'fpl', 'heap', '*')
+heapcontents = FPL_IO[heapdir]
 unless heapcontents.empty?
     puts "Contents of heap:"
     heapcontents.each do |file|
@@ -38,10 +45,10 @@ unless heapcontents.empty?
 end
 
 puts "Return Value: #{stack.pop.value}" unless stack.empty?
-Dir.chdir ".."
-FileUtils.rm_r('fpl')
+FPL_IO.goto ".."
+FPL_IO.rm 'fpl'
 
 puts "Total IO operations:"
-puts "\tReads:   #{FPLIO.reads}"
-puts "\tWrites:  #{FPLIO.writes}"
-puts "\tDeletes: #{FPLIO.deletes}"
+puts "\tReads:   #{FPL_IO.reads}"
+puts "\tWrites:  #{FPL_IO.writes}"
+puts "\tDeletes: #{FPL_IO.deletes}"
